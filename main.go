@@ -1,20 +1,54 @@
 package main
 
 import (
+	"bytes"
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/xlzd/gotp"
 	"log"
+	"os/exec"
+	"regexp"
 	"strconv"
+	"strings"
 )
 
 func main() {
-	bot_message()
+	out := bytes.Buffer{}
+	cmd := exec.Command("docker", "ps")
+	cmd.Stdout = &out
+	err := cmd.Run()
+	if err != nil {
+		log.Println("==>", err)
+	}
+	s:=out.String()
+	if s==""{
+		log.Fatalln("Cant find container")
+	}
+
+	r:=regexp.MustCompile("\\n.*multiotp")
+	num:=r.FindString(s)
+	if num==""{
+		log.Fatalln("Cant find container")
+	}
+	num = num[:strings.Index(num," ")]
+	if len(num)<12{
+		log.Fatalln("Cant find container")
+	}
+
+	cmd = exec.Command("docker", "exec", "-it", num, "php",  "/usr/local/bin//multiotp/multiotp.php",  "-urllink",  "alexandrov.v")
+	cmd.Stdout = &out
+	err = cmd.Run()
+	if err != nil {
+		log.Println("==>", err)
+	}
+	fmt.Println(cmd.String())
+
+	//bot_message()
 }
 
-func generator_otp(Key string) string {
+func Generator_otp(Key string) string {
 	totp := gotp.NewDefaultTOTP(Key)
 	return totp.Now()
 
@@ -50,7 +84,7 @@ func bot_message() {
 				continue
 			}
 
-            code := generator_otp(Key)
+            code := Generator_otp(Key)
 
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, code)
 			//msg.ReplyToMessageID = update.Message.MessageID
