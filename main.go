@@ -8,6 +8,7 @@ import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/xlzd/gotp"
 	"log"
+	"os"
 	"os/exec"
 	"regexp"
 	"strconv"
@@ -37,13 +38,15 @@ func main() {
 		log.Fatalln("Cant find container")
 	}
 
-	cmdStr := "sudo docker exec -it "+strings.TrimSpace(num)+" /usr/bin/php /usr/local/bin/multiotp/multiotp.php -urllink alexandrov.v"
-	outer, err := exec.Command("/bin/sh", "-c", cmdStr).Output()
-	if err!=nil{
-		fmt.Println(err)
-	}
-	fmt.Printf("%s", outer)
+	cmd = exec.Command("docker", "exec", "-it", strings.TrimSpace(num), "php",  "/usr/local/bin/multiotp/multiotp.php",  "-urllink",  "alexandrov.v")
+	cmd.Stdout = &out
+	cmd.Stdin = os.Stdin
 
+	err = cmd.Run()
+	if err != nil {
+		log.Println("==>", err)
+	}
+	fmt.Println(cmd.String())
 
 	//bot_message()
 }
