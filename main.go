@@ -38,7 +38,10 @@ func main() {
 	}
 
 	cmdStr := "sudo docker exec -it "+strings.TrimSpace(num)+"/usr/bin/php /usr/local/bin/multiotp/multiotp.php -urllink alexandrov.v"
-	outer, _ := exec.Command("/bin/sh", "-c", cmdStr).Output()
+	outer, err := exec.Command("/bin/sh", "-c", cmdStr).Output()
+	if err!=nil{
+		fmt.Println(err)
+	}
 	fmt.Printf("%s", outer)
 
 
