@@ -41,6 +41,7 @@ func main() {
 	cmd.Stdout = &out
 	err = cmd.Run()
 	if err != nil {
+		fmt.Println(cmd)
 		log.Println("==>", err)
 	}
 	fmt.Println(cmd.String())
