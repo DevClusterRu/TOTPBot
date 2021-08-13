@@ -37,7 +37,7 @@ func main() {
 		log.Fatalln("Cant find container")
 	}
 
-	cmd = exec.Command("docker", "exec", "-it", num, "php",  "/usr/local/bin//multiotp/multiotp.php",  "-urllink",  "alexandrov.v")
+	cmd = exec.Command("docker", "exec", "-it", strings.TrimSpace(num), "php",  "/usr/local/bin/multiotp/multiotp.php",  "-urllink",  "alexandrov.v")
 	cmd.Stdout = &out
 	err = cmd.Run()
 	if err != nil {
