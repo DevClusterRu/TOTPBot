@@ -15,7 +15,7 @@ import (
 
 func main() {
 	out := bytes.Buffer{}
-	cmd := exec.Command("/usr/local/bin/multiotp/multiotp", " -urllink", "alexandrov.v")
+	cmd := exec.Command("php","/usr/local/bin/multiotp/multiotp.php", " -urllink", "alexandrov.v")
 	cmd.Stdout = &out
 	cmd.Stdin = os.Stdin
 
