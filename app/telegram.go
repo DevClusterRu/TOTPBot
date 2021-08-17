@@ -4,7 +4,6 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/xlzd/gotp"
 	"log"
-	"strconv"
 )
 
 func Generator_otp(Key string) string {
@@ -30,16 +29,16 @@ func StartBot() {
 
 	for update := range updates {
 
-		id := update.Message.From.ID
+		//id := update.Message.From.ID
 
 		if update.Message == nil { // ignore any non-Message Updates
 			continue
 		}
 		if update.Message.Text == "give" {
 
-			Key := Connect_db(strconv.Itoa(id))
+			//Key := Connect_db(strconv.Itoa(id))
 
-			Key = GetUserToken("alexandrov.v")
+			Key := GetUserToken("alexandrov.v")
 
 			if Key == "" {
 				continue
@@ -48,7 +47,7 @@ func StartBot() {
 			code := Generator_otp(Key)
 
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, code)
-			//msg.ReplyToMessageID = update.Message.MessageID
+			msg.ReplyToMessageID = update.Message.MessageID
 
 			bot.Send(msg)
 		} else {
