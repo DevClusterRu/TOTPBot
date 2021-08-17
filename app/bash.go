@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	"log"
 	"os/exec"
 	"regexp"
@@ -8,10 +9,11 @@ import (
 )
 
 func GetUserToken(user string) (key string)  {
+	fmt.Println("Try find ", user)
 	key = ""
-	out, err := exec.Command("bash", "-c", "php /usr/local/bin/multiotp/multiotp.php -urllink "+user).Output()
+	out, err := exec.Command("bash", "-c", "/usr/bin/php /usr/local/bin/multiotp/multiotp.php -urllink "+user).Output()
 	if err!=nil{
-		log.Println("Wrong getting key")
+		log.Println("Wrong getting key, ", err)
 		return
 	}
 	r:=regexp.MustCompile("secret.*?&")
