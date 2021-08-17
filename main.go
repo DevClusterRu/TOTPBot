@@ -1,30 +1,51 @@
 package main
 
 import (
-	"bytes"
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/xlzd/gotp"
 	"log"
-	"os"
 	"os/exec"
 	"strconv"
 )
 
-func main() {
-	out := bytes.Buffer{}
-	cmd := exec.Command("php","/usr/local/bin/multiotp/multiotp.php", " -urllink", "alexandrov.v")
-	cmd.Stdout = &out
-	cmd.Stdin = os.Stdin
+func hexdec(str string) (int64, error) {
+	return strconv.ParseInt(str, 16, 0)
+}
 
-	err := cmd.Run()
-	if err != nil {
-		log.Println("==>", err)
+func hex2bin(hexdata string) string {
+	bindata := ""
+	for i := 0; i < len(hexdata); i += 2 {
+		h,_:=hexdec(hexdata[i:i+2])
+		fmt.Print(rune(int32(h)))
 	}
-	fmt.Println(cmd.String())
+	return bindata
+}
 
+func urllink(str string)  {
+
+}
+
+func main() {
+
+	out, err := exec.Command("bash", "-c", "php /usr/local/bin/multiotp/multiotp.php -urllink alexandrov.v").Output()
+
+	fmt.Println(string(out), err)
+
+
+	//out := bytes.Buffer{}
+	//cmd := exec.Command("php", "/usr/local/bin/multiotp/multiotp.php", " -urllink", "alexandrov.v")
+	//cmd.Stdout = &out
+	//cmd.Stdin = os.Stdin
+	//
+	//err := cmd.Run()
+	//if err != nil {
+	//	log.Println("==>", err)
+	//}
+	//fmt.Println(cmd.String())
+	//
 	//bot_message()
 }
 
@@ -33,7 +54,6 @@ func Generator_otp(Key string) string {
 	return totp.Now()
 
 }
-
 
 func bot_message() {
 	bot, err := tgbotapi.NewBotAPI("1938796209:AAG9APOYakqvg0PjygEfmyUKEW-LANZY5gc")
@@ -60,11 +80,11 @@ func bot_message() {
 		if update.Message.Text == "give" {
 
 			Key := Connect_db(strconv.Itoa(id))
-			if Key==""{
+			if Key == "" {
 				continue
 			}
 
-            code := Generator_otp(Key)
+			code := Generator_otp(Key)
 
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, code)
 			//msg.ReplyToMessageID = update.Message.MessageID
