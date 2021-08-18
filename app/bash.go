@@ -30,13 +30,13 @@ func GetUserToken(user string) (key string)  {
 func ADSync()  {
 	for {
 		fmt.Println("Start sync ")
-		out, err := exec.Command("bash", "-c", "/usr/bin/php /usr/local/bin/multiotp/multiotp.php -ldap-users-sync").Output()
+		_, err := exec.Command("bash", "-c", "/usr/bin/php /usr/local/bin/multiotp/multiotp.php -ldap-users-sync").Output()
 		if err != nil {
 			log.Println("Wrong sync, ", err)
 			return
 		}
-		fmt.Println("Done (", string(out), ")")
+		fmt.Println("Done.")
 
-		time.Sleep(10*time.Second)
+		time.Sleep(180*time.Second)
 	}
 }
