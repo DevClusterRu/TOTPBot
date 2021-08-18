@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	"strings"
 )
 
 func Connect_db(telegramId string) string {
@@ -20,17 +21,22 @@ func Connect_db(telegramId string) string {
 		panic(err)
 	}
 	defer rows.Close()
-	var Key string
+	var key string
 
 	for rows.Next() {
 
-		err := rows.Scan(&Key)
+		err := rows.Scan(&key)
 		if err != nil {
 			fmt.Println(err)
 			continue
 		}
 
 	}
-	return Key
+
+	if strings.Contains(key,`\`){
+		key = key[strings.Index(key, `\`)+1:]
+	}
+
+	return key
 }
 

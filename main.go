@@ -7,7 +7,8 @@ import (
 
 func main() {
 
-fmt.Println(app.Connect_db("123"))
+login := app.Connect_db("123")
+fmt.Println(login)
 	//app.StartBot()
 }
 
