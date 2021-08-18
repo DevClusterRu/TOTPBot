@@ -15,7 +15,7 @@ func Connect_db(telegramId string) string {
 	}
 
 	defer db.Close()
-	rows, err := db.Query("select login from users") // where telegram = ?", telegramId
+	rows, err := db.Query("select `user_login` from users") // where telegram = ?", telegramId
 	if err != nil {
 		panic(err)
 	}
