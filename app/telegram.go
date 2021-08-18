@@ -15,6 +15,12 @@ func Generator_otp(Key string) string {
 }
 
 func StartBot() {
+	var numericKeyboard = tgbotapi.NewReplyKeyboard(
+		tgbotapi.NewKeyboardButtonRow(
+			tgbotapi.NewKeyboardButton("Получить код доступа"),
+		),
+	)
+
 	bot, err := tgbotapi.NewBotAPI("1938796209:AAG9APOYakqvg0PjygEfmyUKEW-LANZY5gc")
 	if err != nil {
 		log.Panic(err)
@@ -41,6 +47,7 @@ func StartBot() {
 			login := Connect_db(strconv.Itoa(id))
 			if strings.TrimSpace(login)==""{
 				msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Такой пользователь не найден")
+				msg.ReplyMarkup = numericKeyboard
 				bot.Send(msg)
 			}
 			Key := GetUserToken(login)
@@ -50,10 +57,11 @@ func StartBot() {
 			code := Generator_otp(Key)
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, code)
 			msg.ReplyToMessageID = update.Message.MessageID
-
+			msg.ReplyMarkup = numericKeyboard
 			bot.Send(msg)
 		} else {
-			msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Для получение одноразового кода введите слово: give")
+			msg := tgbotapi.NewMessage(update.Message.Chat.ID, `Для получение одноразового кода нажмите кнопку "Получить код доступа"` )
+			msg.ReplyMarkup = numericKeyboard
 			bot.Send(msg)
 		}
 
