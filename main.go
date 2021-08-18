@@ -1,13 +1,18 @@
 package main
 
 import (
+	"fmt"
 	"otpbot/app"
 )
 
-
 func main() {
-	app.StartBot()
+
+fmt.Println(app.Connect_db("123"))
+	//app.StartBot()
 }
+
+
+
 
 
 
