@@ -42,7 +42,7 @@ func StartBot() {
 		if update.Message == nil { // ignore any non-Message Updates
 			continue
 		}
-		if update.Message.Text == "give" {
+		if update.Message.Text == "Получить код доступа" {
 
 			login := Connect_db(strconv.Itoa(id))
 			if strings.TrimSpace(login)==""{
