@@ -5,7 +5,7 @@ import (
 )
 
 func main() {
-
+	go app.ADSync()
 	app.StartBot()
 }
 
