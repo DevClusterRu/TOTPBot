@@ -13,7 +13,7 @@ import (
 func Generator_otp(Key string) string {
 	totp := gotp.NewDefaultTOTP(Key)
 	code, exp:=totp.NowWithExpiration()
-	return fmt.Sprintf("пароль: %s до окончания действия данного пароля осталось %d секунд",code, (exp-time.Now().Unix()))
+	return fmt.Sprintf("пароль: %s \nдо окончания действия данного пароля осталось %d секунд",code, (exp-time.Now().Unix()))
 }
 
 func StartBot() {
