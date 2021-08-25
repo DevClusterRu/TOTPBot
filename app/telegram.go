@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/xlzd/gotp"
 	"log"
@@ -10,8 +11,8 @@ import (
 
 func Generator_otp(Key string) string {
 	totp := gotp.NewDefaultTOTP(Key)
-	return totp.Now()
-
+	code, exp:=totp.NowWithExpiration()
+	return fmt.Sprintf("%s Осталось %d",code, exp)
 }
 
 func StartBot() {
