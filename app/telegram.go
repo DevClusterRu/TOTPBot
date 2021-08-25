@@ -7,12 +7,13 @@ import (
 	"log"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func Generator_otp(Key string) string {
 	totp := gotp.NewDefaultTOTP(Key)
 	code, exp:=totp.NowWithExpiration()
-	return fmt.Sprintf("%s Осталось %d",code, exp)
+	return fmt.Sprintf("%s Осталось %d",code, (exp-time.Now().Unix()))
 }
 
 func StartBot() {
