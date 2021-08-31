@@ -62,6 +62,7 @@ func StartBot() {
 			msg.ReplyMarkup = numericKeyboard
 			bot.Send(msg)
 		} else {
+			log.Println("RECV: ",update.Message.Text, " FROM ", update.Message.From.UserName)
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, `Для получение одноразового кода нажмите кнопку "Получить код доступа"` )
 			msg.ReplyMarkup = numericKeyboard
 			bot.Send(msg)
