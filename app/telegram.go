@@ -39,11 +39,12 @@ func StartBot() {
 
 	for update := range updates {
 
-		id := update.Message.From.ID
-
 		if update.Message == nil { // ignore any non-Message Updates
 			continue
 		}
+
+		id := update.Message.From.ID
+
 		if update.Message.Text == "Получить код доступа" {
 
 			login := Connect_db(strconv.Itoa(id))
