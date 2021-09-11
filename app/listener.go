@@ -35,7 +35,7 @@ func (c *Config) ListenTarantool() {
 		}
 
 		if len(resp.Data) == 0 {
-			time.Sleep(5 * time.Second)
+			time.Sleep(100 * time.Millisecond)
 			continue
 		}
 
@@ -44,16 +44,10 @@ func (c *Config) ListenTarantool() {
 		id := resp.Data[0].([]interface{})[0].(uint64)
 		uid := resp.Data[0].([]interface{})[2].(uint64)
 		chatId := resp.Data[0].([]interface{})[3].(uint64)
+		fio := resp.Data[0].([]interface{})[4].(string)
+		username := resp.Data[0].([]interface{})[5].(string)
 
-		defer func() {
-			_, err := c.Tarantool.Conn.Call("ack", []interface{}{"telegramMsgs", id})
-			if err != nil {
-				fmt.Println("ACK error: ", err)
-				return
-			}
-		}()
-
-		login := Connect_db(strconv.Itoa(int(uid)))
+		login := c.Mysql.GetLogin(strconv.Itoa(int(uid)))
 		if strings.TrimSpace(login) == "" {
 			msg := tgbotapi.NewMessage(int64(chatId), c.CantFind)
 			msg.ReplyMarkup = numericKeyboard
@@ -66,11 +60,18 @@ func (c *Config) ListenTarantool() {
 		}
 		code, exp := Generator_otp(Key)
 		//"ФИО: %s\nЛогин: %s\nПароль: %s\nдо окончания действия данного пароля осталось %d сек."
-		message:=fmt.Sprintf(c.Answer, "FIO", "LOGIN", code, (exp-time.Now().Unix()))
+		message:=fmt.Sprintf(c.Answer, fio, username, code, (exp-time.Now().Unix()))
 
 		msg := tgbotapi.NewMessage(int64(chatId), message)
 		msg.ReplyMarkup = numericKeyboard
 		c.Bot.Send(msg)
+
+		_, err = c.Tarantool.Conn.Call("ack", []interface{}{"telegramMsgs", id})
+		if err != nil {
+			fmt.Println("ACK error: ", err)
+			return
+		}
+
 	}
 
 }

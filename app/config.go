@@ -12,13 +12,15 @@ import (
 type Config struct {
 	TARANTOOL string `yaml:"TARANTOOL"`
 	TELEGRAM  string `yaml:"TELEGRAM"`
-	Button string `yaml:"button"`
-	Greet string `yaml:"greet"`
-	Answer string `yaml:"answer"`
-	CantFind string `yaml:"cant_find"`
+	MYSQL     string `yaml:"MYSQL"`
+	Button    string `yaml:"button"`
+	Greet     string `yaml:"greet"`
+	Answer    string `yaml:"answer"`
+	CantFind  string `yaml:"cant_find"`
 	Tarantool *TTool
+	Mysql *MYSQL
 	Metrics   *Metrics
-	Bot *tgbotapi.BotAPI
+	Bot       *tgbotapi.BotAPI
 }
 
 func NewConfig(fileName string) (config *Config, err error) {
@@ -45,6 +47,9 @@ func NewConfig(fileName string) (config *Config, err error) {
 	if err != nil {
 		log.Panic(err)
 	}
+
+	config.Mysql = &MYSQL{}
+	config.Mysql.DB = config.NewMysqlConnection()
 
 	config.Tarantool = NewTarantool(config.TARANTOOL)
 	return config, err

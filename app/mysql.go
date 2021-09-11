@@ -7,16 +7,21 @@ import (
 	"strings"
 )
 
-func Connect_db(telegramId string) string {
+type MYSQL struct {
+	DB *sql.DB
+}
 
-	db, err := sql.Open("mysql", "user:123456@tcp(10.175.255.30)/new_hdesk")
-
+func (c *Config) NewMysqlConnection() *sql.DB  {
+	db, err := sql.Open("mysql", c.MYSQL)
 	if err != nil {
 		panic(err)
 	}
+	return db
+}
 
-	defer db.Close()
-	rows, err := db.Query("select `user_login` from users where telegram = ?", telegramId)
+func (m *MYSQL) GetLogin(telegramId string) string {
+
+	rows, err := m.DB.Query("select `user_login` from users where telegram = ?", telegramId)
 	if err != nil {
 		panic(err)
 	}
